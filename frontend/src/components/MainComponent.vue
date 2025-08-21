@@ -65,9 +65,9 @@ import { eventBus } from '../utils/extensions';
 
     const handlerURL = async function(data) {
 
-      console.log(data)
+      data.user_id = null
+      
       try {
-
         const request = await fetch('http://127.0.0.1:8000/create_shorten_url', {
         method: 'POST',
         headers: {
@@ -77,12 +77,14 @@ import { eventBus } from '../utils/extensions';
         });
 
         if(!request.ok){
-          console.log("Algp correu mal")
+          console.log("Algo correu mal")
+          console.log(request)
             msg.value = 'Não foi possível estabelecer ligação com o servidor'
         }
-        console.log(data)
 
         const responseData  = await request.json();
+        console.log(responseData)
+
 
         if (responseData.shorten_url){
           console.log('Já existe essa url')

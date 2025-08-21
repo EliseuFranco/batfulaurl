@@ -1,7 +1,8 @@
 import requests
 import jwt
 from functools import wraps
-from datetime import datetime, timedelta
+import datetime 
+from fastapi import Request
 
 
 SECRET_KEY = '43wesazxcvbghj'
@@ -34,10 +35,10 @@ def get_metric_number(values):
 def create_exp_timestamp(hour = 1):
 
     try:
-        return datetime.timestamp(datetime.today().now() + timedelta(hours=hour))
+        return datetime.datetime.timestamp(datetime.datetime.today().now() + datetime.timedelta(hours=hour))
 
     except Exception as e:
-        print('Algo correu mal ao criar tempo de expiração')
+        print('Algo correu mal ao criar tempo de expiração', str(e))
         return 'erro ao criar tempo de expiração'
 
 def create_token(payload):
@@ -57,49 +58,32 @@ def create_token(payload):
 
 def token_required(fn):
     @wraps(fn)
-    def wrapper(*args, **kwargs):
+    async def wrapper(*args, **kwargs):
 
-        if 'token' not in kwargs:
-            return 'Acesso negado ou token expirado'
-        
+        request : Request = kwargs.get('request') or args[0]
+
         try:
-            user_data = jwt.decode(jwt=kwargs.get('token'), key=kwargs.get('key'), algorithms='HS256')
-            return fn(user_data)
+            auth_header = request.headers.get('Authorization')
+
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return {'msg': 'Token mal formatado'}
+            
+            token = auth_header.split(' ')[-1]
+
+            user_data = jwt.decode(jwt=token, key=SECRET_KEY, algorithms='HS256')
+            request.state.user_id = user_data['id']
+            print('Dados do usuário: ', user_data)
+            return await fn(*args, **kwargs)
         
         except jwt.exceptions.ExpiredSignatureError as e:
-            return 'Token expirado faça login'
+            return {'msg': 'Token expirado faça login'}
         except jwt.exceptions.DecodeError as e:
-            return 'Token inválido'
+            return {'msg': 'Token inválido'}
         except Exception as e:
-            return 'Houve um erro ao obter usuário'
+            return {'msg':'Houve um erro ao obter usuário', 'erro': str(e)}
+        
     return wrapper
 
 
-@token_required
-def admin_template(data):
-    return 'Administrador: ', data
-
-exp = create_exp_timestamp()
-token = create_token({'id':1, 'nome':'Eliseu', 'role':'admin', 'exp': exp})
-
-res = admin_template(token = token, key='43wesazxcvbghj')
-print(res)
-
-
-print(create_exp_timestamp())
-
-
-
-
-# def higger(fn):
-#     def wrapper(data):
-#         return fn(data)
-#     return wrapper
-
-# @higger
-# def soma(numero : list):
-#     return sum(numero)
-
-
-# res = soma([1,3,4,5,2])
-# print(res)
+def get_year_month_day(date_time):
+    return date_time.strftime('%d/%m/%Y')

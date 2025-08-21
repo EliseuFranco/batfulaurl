@@ -19,7 +19,7 @@
                             <path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
                     </a>
                 </p>
-                <a :href="url.original_url" target="_blank" class="hover:text-zinc-500"><span class="text-purple-400">Link original</span>: {{ createMask(url.original_url) }}</a>
+                <a :href="url.original_url" target="_blank" class="hover:text-zinc-500"><span class="text-purple-400">Link original</span>: {{ createMask(url.original_url)}}</a>
             </div>
         </div>
      </section>
@@ -54,7 +54,7 @@
         catch(error){
             console.log("Algo correu mal")
         }
-
+ç
     }
 
     const getSlug = function(shorten_url){

@@ -1,4 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
+import {jwtDecode} from 'jwt-decode'
 
 import HomeView from '../views/HomeView.vue'
 import DashboardView from '../views/DashboardView.vue'
@@ -13,7 +14,10 @@ const routes = [
     },
     {
         path: '/dashboard',
-        component: DashboardView
+        component: DashboardView,
+        meta : {
+            requiresAuth: true 
+        }
     },
     {
         path: '/login',
@@ -23,7 +27,6 @@ const routes = [
         path: '/register',
         component: AuthView
     },
-
 ]
 
 const router = createRouter(
@@ -33,6 +36,21 @@ const router = createRouter(
 
     }
 )
+
+router.beforeEach((to, from, next) => {
+
+    const token = localStorage.getItem('token')
+    const { exp } = jwtDecode(token)
+
+    const isAuthenticated = Boolean(exp * 1000 > Date.now())
+
+    if(to.meta.requiresAuth && !isAuthenticated){
+        next('/login')
+    }
+    else {
+        next()
+    }
+})
 
 
 export default router

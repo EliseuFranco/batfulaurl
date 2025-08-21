@@ -19,7 +19,7 @@
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="password_confirm" class="font-semibold">Confirmar palavra-passe</label>
-                        <input type="password" name="password_confirm" id="password_confirm" placeholder="password_confirm" class="border border-zinc-700 p-2 rounded-xl" v-model="passwordConfirmation" required>
+                        <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirmar palavra-passe" class="border border-zinc-700 p-2 rounded-xl" v-model="passwordConfirmation" required>
                         <span class="text-xs text-red-400">{{ errorMsg }}</span>
                     </div>
                     <button class="bg-purple-800 w-full mt-5 p-2 rounded-xl cursor-pointer hover:bg-purple-900">Iniciar sessão</button>

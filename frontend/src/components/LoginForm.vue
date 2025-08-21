@@ -1,6 +1,8 @@
 <template>
     <section class="h-screen flex flex-col md:flex-row items-center justify-center text-white">
-     
+        <div>
+            <Message :msg="msg"/>
+        </div>
         <div class="">
             <h3 class="text-center mb-5 text-xl font-semibold">Seja bem-vindo(a) de volta</h3>
             <div class="grid md:grid-cols-2 w-full max-w-4xl p-5 text-sm">
@@ -36,9 +38,11 @@
 <script setup>
 
     import { ref } from 'vue';
+    import Message from './Message.vue'
 
     const email = ref('')
     const password = ref('')
+    const msg = ref('')
 
     const login = async function() {
 
@@ -55,7 +59,13 @@
 
         const data = await request.json()
 
-        console.log(data)
+        if (!data.token){
+            msg.value = data.msg
+            return
+        }
+        localStorage.setItem('token', data.token)
+        window.location.href = 'http://localhost:5173/dashboard'
+
     }
 
 </script>

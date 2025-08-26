@@ -102,7 +102,7 @@
 
             const token = localStorage.getItem('token')
 
-            const resquetToken = await fetch(`http://127.0.0.1:8000/dashboard?page=${currantPage.value}`, {
+            const resquetToken = await fetch(`https://batfulaurl-backend.onrender.com?page=${currantPage.value}`, {
             headers : {
                 'Authorization': `Bearer ${token}`
             }

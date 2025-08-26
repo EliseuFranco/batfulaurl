@@ -326,9 +326,6 @@ async def dashboard(request: Request, session: sessionDP, page: int):
     serialized_device = serialize_device(clicks_by_devices)
     city_serialized = serialize_cities(clicks_by_cities)
     
-
-    print(city_serialized)
-
     return {
         'user_data': data,
         'all_urls': {

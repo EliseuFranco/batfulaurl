@@ -5,14 +5,16 @@ import datetime
 from fastapi import Request
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
+import os
 
 
-SECRET_KEY = '43wesazxcvbghj'
+SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
+GEO_IFY_SECRET_KEY = os.environ.get('GEO_IFY_SECRET_KEY')
 
 def get_client_data(ip):
 
     try:
-        request = requests.get(f'https://geo.ipify.org/api/v2/country,city?apiKey=at_kp1RbpHZoD8Xi5EWwt6nbCVAcaOKG&ipAddress={ip}')
+        request = requests.get(f'https://geo.ipify.org/api/v2/country,city?apiKey={GEO_IFY_SECRET_KEY}&ipAddress={ip}')
         data = request.json()
         return data
         

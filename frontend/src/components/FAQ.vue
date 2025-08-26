@@ -1,11 +1,11 @@
 <template>
-  <section class="text-zinc-200 p-10">
+  <section class="text-zinc-200 p-10 bg-zinc-900">
     <div class="w-full max-w-4xl mx-auto grid gap-5">
       <h3 class="text-xl font-semibold">FAQ'S</h3>
       <div
         v-for="(faq, index) in faqs"
         :key="index"
-        class="border-l-4 border-gray-500 p-5 rounded-2xl bg-zinc-900"
+        class="border-l-4 border-gray-500 p-5 rounded-2xl bg-zinc-800"
       >
         <div class="flex items-center justify-between cursor-pointer" @click="toggleQuestion(index)">
           <h3 class="text-lg font-semibold">{{ faq.pergunta }}</h3>

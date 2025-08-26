@@ -45,7 +45,7 @@
 import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps({
-  refresh: Number
+  refresh: Number,
 })
 
 const emits = defineEmits(['metrics', 'update'])
@@ -62,7 +62,6 @@ const getMetrics = async function () {
 
     const data = await request.json()
     metrica.value = data
-    console.log(data)
     emits('update')
   } catch (error) {
     emits('metrics', 'Houve um erro na conexão com o servidor')
@@ -70,9 +69,12 @@ const getMetrics = async function () {
   }
 }
 
+watch(()=> props.refresh,(novo, old) => {
+  if(novo){
+    getMetrics()
+  }
+})
+
 onMounted(() => getMetrics())
 
-watch(() => props.refresh, () => {
-  getMetrics()
-})
 </script>

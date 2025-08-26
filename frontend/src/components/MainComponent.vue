@@ -18,19 +18,28 @@
               </div>
             </div>
               <div>
-                  <FormComponent @regist="handlerURL" @update="listURLS"/>
+                  <FormComponent @regist="handlerURL"/>
               </div>
-              <div>
-                  <ListUrls :all_url="URLS" @msg="handlerClipBoardMSG"/>
-            </div>
+              <div class="border border-zinc-900 rounded-xl p-5" v-if="url_created">
+                <div class="flex items-center justify-between gap-10 mb-4">
+                  <p><span class="font-semibold mb-5">URL curta</span>: {{ url_created.shortned }}</p>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-copy-icon lucide-copy text-purple-500 cursor-pointer" @click="handlerClipBoardMSG(url_created.shortned)"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                </div>
+                <p><span class="font-semibold">URL original</span>: {{ createMask(url_created.original) }}</p>
+              </div>
          </div>
          <div>
-              <Metrics :refresh="refreshMetrics" @metrics="handerMetricErrors" @update="listURLS" />
+              <Metrics @metrics="handerMetricErrors" :refresh="refrehMetrics"/>
               <Resources />
-            </div>
-            <div ref="faqs">
-              <FAQ />
-            </div>
+         </div>
+         <div>
+          <Call />
+         </div>
+          <div ref="faqs">
+            <FAQ />
+          </div>
           
     </section>
 </template>
@@ -41,65 +50,39 @@
 
     import { ref, onMounted, watch} from 'vue'
     import FormComponent from './FormComponent.vue';
-    import ListUrls from './ListUrls.vue';
     import Message from './Message.vue';
     import Metrics from './Metrics.vue';
     import FAQ from './FAQ.vue';
     import Resources from './Resources.vue';
-import { eventBus } from '../utils/extensions';
+    import { eventBus, createMask, copyToClipBoard } from '../utils/extensions';
+    import Call from './Call.vue';
+    import {create_url} from '../utils/api.js'
 
 
     const msg = ref('')
-    const refreshMetrics = ref(0)
-    const URLS = ref([])
     const faqs = ref('')
+    const url_created = ref('')
+    const refrehMetrics = ref(0)
 
-    const listURLS = function(){
-      URLS.value = JSON.parse(localStorage.getItem('urls') || '[]')
-  
-    }
-
+   
     const clearMessage = function(){
       msg.value = ''
     }
 
     const handlerURL = async function(data) {
-
-      data.user_id = null
       
       try {
-        const request = await fetch('http://127.0.0.1:8000/create_shorten_url', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify(data)
-        });
+        const token = localStorage.getItem('token')
+        data.token = token
+        const responseData = await create_url(data)
 
-        if(!request.ok){
-          console.log("Algo correu mal")
-          console.log(request)
+        if(!responseData.shortened_url){
             msg.value = 'Não foi possível estabelecer ligação com o servidor'
+            return
         }
-
-        const responseData  = await request.json();
-        console.log(responseData)
-
-
-        if (responseData.shorten_url){
-          console.log('Já existe essa url')
-          msg.value = responseData.msg
-          return
-        }
-
-        const storedUrls = JSON.parse(localStorage.getItem('urls') || '[]')
-        console.log(responseData)
-     
-        storedUrls.push({'shortened_url': responseData .shortened_url, original_url: responseData.original_url})
-        localStorage.setItem('urls',JSON.stringify(storedUrls))
+        url_created.value = {shortned: responseData.shortened_url, original: responseData.original_url}
         msg.value = responseData.msg
-        refreshMetrics.value ++
-        listURLS()
+        refrehMetrics.value++;
 
       } catch (error) {
         msg.value = 'Houve um erro ao estabelecer ligação'
@@ -107,7 +90,8 @@ import { eventBus } from '../utils/extensions';
       }
     }
 
-    const handlerClipBoardMSG = function(message) {
+    const handlerClipBoardMSG = async function(text) {
+        const message = await copyToClipBoard(text)
         msg.value = message
     }
 
@@ -128,9 +112,6 @@ import { eventBus } from '../utils/extensions';
     }
 
     eventBus.on('scroll',scrollTofaq)
-
-
-    onMounted(async () => listURLS())
 
 
 </script>

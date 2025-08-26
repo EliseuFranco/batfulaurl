@@ -3,6 +3,7 @@
 const create_url = async function(data) {
       
     console.log(data)
+    
       try {
         const request = await fetch('http://127.0.0.1:8000/create_shorten_url', {
             method: 'POST',
@@ -33,5 +34,37 @@ const create_url = async function(data) {
       }
     }
 
+const getUserData = async function(page){
 
-export {create_url}
+        
+        try {
+
+            const token = localStorage.getItem('token')
+
+            const resquetToken = await fetch(`http://127.0.0.1:8000/dashboard?page=${page}`, {
+                headers : {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (!resquetToken.ok) {
+                return {msg: 'token inválido', statusCode : 409}
+            }
+
+            const tokenData = await resquetToken.json()
+
+            if (!tokenData.status_code){
+                return {msg: 'Não foi possível obter os dados do utilizador', statusCode: 409}
+            }
+            
+            return tokenData
+
+        } catch(error) {
+            console.log('Houve um erro aomobter dados ', error)
+            return {msg: 'Erro ao obter dados do usuário'}
+        }
+
+
+    }
+
+export {create_url, getUserData}

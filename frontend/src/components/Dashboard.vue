@@ -1,9 +1,9 @@
 <template>
-    <section class="flex flex-col h-full w-full">
+    <section class="flex flex-col min-h-screen w-full overflow-hidden">
             <Message :msg="msg"/>
         <div  class="bg-black/60 fixed top-0 left-0 w-full h-dvh z-70 flex items-center justify-center" v-if="openURLModal">
             <div class="bg-black w-full max-w-xl">
-                <FormComponent :hideButton="openURLModal" @regist="handlerUrlToRegist"/>
+                <FormComponent :hideButton="openURLModal" @regist="handlerUrlToRegist" @update="listUserURL" @close="openURLModal = false"/>
             </div>
         </div>
         <div class="text-white p-10">
@@ -18,11 +18,16 @@
         <div class="p-10 grow">
             <MetrictsCards :data="header"/>
         </div>
-        <div class="w-full md:max-w-3xl p-2">
-            <AreaChart />
+        <div class="flex flex-col lg:flex-row items-center lg:p-5">
+            <AreaChart :chartData="areaChartData" :chartData2 ="areaData2" class="w-full"/>
+            <BarChart class=""/>
+        </div>
+        <div class="flex flex-col lg:flex-row ">
+            <DonutsChart :data="devices"/>
+            <CityTable class="grow" :data="cities"/>
         </div>
         <div ref="userUrl">
-            <UserUrls :urls="all_urls"/>
+            <UserUrls :urls="all_urls" @page="handlerPage"/>
         </div>
     </section>
 </template>
@@ -34,19 +39,28 @@
     import AreaChart from './AreaChart.vue';
     import UserUrls from './UserUrls.vue';
     import FormComponent from './FormComponent.vue';
-    import { eventBus } from '../utils/extensions';
+    import { eventBus, calcConversionRate } from '../utils/extensions';
     import Message from './Message.vue';
-
-    import { create_url } from '../utils/api';
-
+    import { create_url, getUserData } from '../utils/api';
+    import BarChart from './BarChart.vue';
+    import DonutsChart from './Donuts.chart.vue';
+    import CityTable from './CityTable.vue';
+    
 
     const emit = defineEmits(['close'])
+
     const openURLModal = ref(false)
     const userUrl = ref('')
     const msg = ref('')
     const all_urls = ref([])
     const header = ref({})
+    const currantPage = ref(1)
+    const areaChartData = ref([])
+    const areaData2 = ref([])
+    const devices = ref([])
+    const cities = ref([])
 
+    
     const sendEvent = function(){
         emit('close')
     }
@@ -54,6 +68,7 @@
     const toggleModal = function(data){
         openURLModal.value = !openURLModal.value
     }
+    
     const scrollToUrl = function(){
         if(userUrl.value){
             userUrl.value.scrollIntoView({behavior: 'smooth'})
@@ -70,27 +85,38 @@
             msg.value = data.error
             return
         }
-        console.log(data)
+        console.log('URL criada: ', data)
+    }
+
+    const handlerPage = async function(page){
+        const data = await getUserData(page)
+        all_urls.value = data.all_urls
+        
     }
 
     eventBus.on('open', toggleModal)
     eventBus.on('close', toggleModal)
     eventBus.on('ScrollToUrls', scrollToUrl)
 
-    onMounted(async () => {
+    const listUserURL = async function(){
 
-         const token = localStorage.getItem('token')
-         const resqueToken = await fetch('http://127.0.0.1:8000/dashboard', {
+            const token = localStorage.getItem('token')
+
+            const resquetToken = await fetch(`http://127.0.0.1:8000/dashboard?page=${currantPage.value}`, {
             headers : {
                 'Authorization': `Bearer ${token}`
             }
         })
-
-        const tokenData = await resqueToken.json()
-        console.log(tokenData)
+        const tokenData = await resquetToken.json()
         all_urls.value = tokenData.all_urls
         header.value = tokenData.header
+        areaChartData.value= tokenData.all_urls.seven_days_clicks
+        areaData2.value = tokenData.all_urls.unique_7d_clicks
+        devices.value = tokenData.all_urls.devices
+        cities.value = tokenData.all_urls.cities
 
-    })
+    }
+
+    onMounted(async () => listUserURL())
 
 </script>

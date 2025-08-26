@@ -1,27 +1,52 @@
 <template>
-    <section class="p-5 md:p-10 text-black" >
-        <div class="border border-zinc-900  rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm">
-            <apexchart type="area" height="350" :options="chartOptions" :series="series"></apexchart>
+    <section class="p-3 text-black w-full">
+        <div class="border border-zinc-900  rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-105
+         shadow hover:shadow-purple-200 shadow-sm
+        mx-auto">
+            <apexchart type="area" height="350" width="100%" :options="chartOptions" :series="series"></apexchart>
       </div>
+
     </section>
 </template>
 
 
 <script setup>
 
-import { ref } from 'vue';
+    import { ref, computed } from 'vue';
 
+    const props = defineProps({
 
-    const series = ref([
+        chartData: {
+            type: Array,
+            required: true
+        },
+        chartData2: {
+            type: Array,
+            required: true
+        }
+    })
+
+    const series = computed(() => [
         {
-            name: 'Series 1',
-            data: [31, 40, 28, 51, 42, 109, 100]
+            name: 'Total clicks',
+            data: props.chartData.map(({data,clicks}) =>{
+                return {
+                    x: new Date(data).getTime(),
+                    y : clicks
+                }
+            })
         },
         {
-            name: 'Series 2',
-            data: [11, 32, 45, 32, 34, 52, 41]
+            name: 'Clicks únicos',
+            data: props.chartData2.map(({data, clicks}) => {
+                return {
+                    x: new Date(data).getTime(),
+                    y: clicks
+                }
+            })
         }
         ])
+
 
     const chartOptions = ref({
             chart: {
@@ -36,7 +61,10 @@ import { ref } from 'vue';
                         show: false
                     }
                 }
-            }
+            },
+            xaxis: {
+                type: 'datetime'
+            },
         })
 
 </script>

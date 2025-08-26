@@ -4,6 +4,7 @@ import {jwtDecode} from 'jwt-decode'
 import HomeView from '../views/HomeView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import AuthView from '../views/AuthView.vue'
+import Logout from '../components/Logout.vue'
 
 
 const routes = [
@@ -14,6 +15,7 @@ const routes = [
     },
     {
         path: '/dashboard',
+        name: 'dashboard',
         component: DashboardView,
         meta : {
             requiresAuth: true 
@@ -21,11 +23,18 @@ const routes = [
     },
     {
         path: '/login',
+        name: 'login',
         component: AuthView
     },
     {
         path: '/register',
+        name: 'register',
         component: AuthView
+    },
+    {
+        path: '/logout',
+        name: 'Logout',
+        component: Logout
     },
 ]
 
@@ -40,15 +49,21 @@ const router = createRouter(
 router.beforeEach((to, from, next) => {
 
     const token = localStorage.getItem('token')
-    const { exp } = jwtDecode(token)
+    if(!token) {
+        if(to.meta.requiresAuth){
+            next({name : 'login', query: {sessExpired: true}})
+        } else next()
 
-    const isAuthenticated = Boolean(exp * 1000 > Date.now())
+    } else {
+        const { exp } = jwtDecode(token)
+        const isAuthenticated = Boolean(exp * 1000 > Date.now())
 
-    if(to.meta.requiresAuth && !isAuthenticated){
-        next('/login')
-    }
-    else {
-        next()
+        if(to.meta.requiresAuth && !isAuthenticated){
+            next('/login')
+        }
+        else {
+            next()
+        }
     }
 })
 

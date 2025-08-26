@@ -2,10 +2,10 @@
   <section class="p-10 mx-auto">
     <h2 class="text-xl text-zinc-100 font-semibold mb-4">URLs Encurtadas</h2>
 
-    <div v-if="urls.length">
+    <div v-if="urls.urls ">
       <ul class="space-y-4">
         <li
-          v-for="(url, index) in urls"
+          v-for="(url, index) in urls.urls"
           :key="index"
           class="bg-zinc-950 rounded-xl w-full p-4 shadow flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm">
           <div class="w-full space-y-4">
@@ -14,7 +14,6 @@
                     <p class="text-zinc-300 text-sm">Original:</p>
                     <a :href="url.original_url" target="_blank" class="text-blue-400 break-all hover:underline">
                       {{ createMask(url.original_url) }}
-      
                     </a>
                     <p class="text-zinc-300 mt-2 text-sm">Encurtada:</p>
                       <a :href="'http://127.0.0.1:8000/redirect?user_slug=' + url.slug" target="_blank" class="text-purple-500 break-all hover:underline">
@@ -30,23 +29,23 @@
             <div class="flex flex-col gap-2 md:flex-row justify-between">
               <div>
                   <p class="text-zinc-400">Total clicks</p>
-                  <span>1247</span>
+                  <span>{{ url.total_clicks }}</span>
               </div>
               <div>
                   <p class="text-zinc-400">Únicos</p>
-                  <span>865</span>
+                  <span>{{ url.unique_clicks }}</span>
               </div>
               <div>
                   <p class="text-zinc-400">Taxa de conversão</p>
-                  <span>15%</span>
+                  <span>{{ calcConversionRate(url.unique_clicks, url.total_clicks) }} %</span>
               </div>
               <div>
                   <p class="text-zinc-400">Criado em</p>
-                  <span>2025/08/19</span>
+                  <span>{{ url.data }}</span>
               </div>
               <div>
                   <p class="text-zinc-400">Ação</p>
-                  <span class="text-red-400 underline cursor-pointer">Eliminar</span>
+                  <span class="text-red-400 underline cursor-pointer" @click="openModal(url.id)">Eliminar</span>
               </div>
             </div>
           </div>
@@ -54,20 +53,74 @@
           </div>
         </li>
       </ul>
+      <div class="flex items-center gap-2 justify-center mt-4">
+        <button class="border border-zinc-900 p-2 text-xs rounded-xl cursor-pointer text-zinc-70 hover:bg-white hover:text-zinc-950"
+          :disabled="currentPage === 1" @click="pagination(currentPage -=1)"> &lt; Previous</button>
+        <span class="text-sm">{{ urls.page }} de {{ urls.total_pages }}</span>
+        <button class="border border-zinc-900 p-2 text-xs rounded-xl cursor-pointer text-zinc-70 hover:bg-white hover:text-zinc-950"
+        @click="pagination(currentPage+=1)" :disabled="urls.total_pages === urls.page">Next &gt;</button>
+    </div> 
     </div>
     <div v-else>
         <p class="text-center text-sm">Sem urls criadas</p>
     </div>
+    <div v-if="openConfirmation">
+          <ConfirmationModal @confirmation="handlerConfirmation" @cancel="openConfirmation = false"/>
+      </div>
   </section>
 </template>
 
 <script setup>
   import { ref } from 'vue'
-  import { copyToClipBoard, createMask } from '../utils/extensions'
+  import { copyToClipBoard, createMask, calcConversionRate} from '../utils/extensions'
+  import ConfirmationModal from './ConfirmationModal.vue'
+  
+  const currentPage = ref(1)
+  const emits = defineEmits(['page'])
+  const openConfirmation = ref(false)
+  const urlIDtoDelete = ref(0)
 
   const props = defineProps({
       urls : {
-        type: Array
+        type: Object
       }
     })
+
+    const pagination = function(page){
+      currentPage.value = page
+      emits('page', currentPage.value)
+
+    }
+
+    const handlerConfirmation = async function(){
+
+      try {
+          const request = await fetch(`http://127.0.0.1:8000/delete_url?id=${urlIDtoDelete.value}`, {
+            method : 'DELETE'
+          })
+          
+          if(!request.ok){
+            console.log("Não foi possível emilinar ma url tente novamente")
+            return
+          }
+          const data = await request.json()
+
+          if(!data.status_code){
+            console.log("Houve um erro ao tentar remover a url")
+            return
+          }
+          emits('page', currentPage.value)
+          
+
+
+      }catch(error){
+
+      }
+      
+    }
+
+    const openModal = function(id){
+      urlIDtoDelete.value = id
+      openConfirmation.value = !ConfirmationModal.value
+    }
 </script>

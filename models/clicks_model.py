@@ -10,6 +10,7 @@ class Clicks(SQLModel, table=True):
     ip_address: str = Field(index=True)
     country: str = Field(nullable=False)
     city: str = Field(nullable=False)
+    device : str = Field(nullable=True)
     clicked_at: datetime = Field(default=func.now())
 
     url: Optional[URLS] = Relationship(back_populates="clicks")

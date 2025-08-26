@@ -1,13 +1,14 @@
 import  mitt from 'mitt'
+import { jwtDecode } from 'jwt-decode'
 
 const eventBus = mitt()
 
 
 
 const copyToClipBoard = async function(text) {
-    
     try{
         navigator.clipboard.writeText(text)
+        return 'Copiado para área de transferência'
     }
     catch(error){
         console.log("Algo correu mal", error)
@@ -35,5 +36,21 @@ const createMask = (url) => {
     }
 }
 
+const isAuthenticated = function(){
+    const token = localStorage.getItem('token')
 
-export {eventBus, copyToClipBoard, getSlug, createMask}
+    if(!token){
+        return false
+    }
+    const {exp} = jwtDecode(token)
+
+    return exp * 1000 > Date.now()
+}
+
+const calcConversionRate = (unique_clicks, total_clicks) => {
+    if (!total_clicks) return 0;
+    return ((unique_clicks / total_clicks) * 100).toFixed(2);
+}
+
+
+export {eventBus, copyToClipBoard, getSlug, createMask, isAuthenticated, calcConversionRate}

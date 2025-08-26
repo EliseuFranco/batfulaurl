@@ -16,6 +16,7 @@
     const isMobile = ref(window.innerWidth < 768)
 
     const handlerClose = function(data){
+        
         isMobile.value = !isMobile.value
     }
 

@@ -19,7 +19,7 @@
     import { eventBus } from '../utils/extensions'
 
     const url = ref('')
-    const emits = defineEmits(['regist', 'update','open'])
+    const emits = defineEmits(['regist', 'update','open','close'])
     const props = defineProps(['hideButton'])
 
 
@@ -27,6 +27,7 @@
 
         emits('regist', {url: url.value})
         emits('update')
+        emits('close')
         url.value = ''
     }
 

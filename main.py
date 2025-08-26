@@ -1,24 +1,26 @@
 from fastapi import FastAPI, Depends, Request
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
-from sqlmodel import SQLModel, Field, create_engine, Session, select, delete, update, func, distinct
+from sqlmodel import SQLModel, Field, create_engine, Session, select, delete, update, func, distinct, and_
 from typing import Annotated, Optional
 from urllib.parse import urlparse
 from random import choice
 from string import ascii_letters , digits
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from utils import get_client_data, create_token, create_exp_timestamp, token_required, get_year_month_day
+from utils import *
 from models.urls_model import URLS
 from models.clicks_model import Clicks
 from models.user_model import Users
+from services import *
+from math import ceil
+from user_agents import parse
 
 
 
 
 class UrlRequest(BaseModel):
     url : str
-
 
 class ShortenUrlRequest(BaseModel):
     shorten : str
@@ -29,9 +31,14 @@ class RegisterData(BaseModel):
     email : Optional[str]
     password_hash : Optional[str]
 
+
 class LoginData(BaseModel):
     email: str
     password_hash : str
+
+
+class Pagination(BaseModel):
+    page : int 
 
 db_name = 'url_db.db'
 database_url = f'sqlite:///{db_name}'
@@ -118,9 +125,14 @@ async def create_shorten_url(req : UrlRequest, session: sessionDP, request : Req
 
         if auth_header and auth_header.startswith('Bearer '):
             token = auth_header.replace('Bearer ','')
-            user_d = jwt.decode(token, key=SECRET_KEY, algorithms='HS256')
-            user_id = user_d['id']
 
+            try:
+                user_d = jwt.decode(token, key=SECRET_KEY, algorithms='HS256')
+                user_id = user_d['id']
+            
+            except Exception as e:
+                user_id = None
+                
         if not check_url(url):
             return {'error': 'URL inválida'}
         
@@ -168,6 +180,15 @@ async def redirect_to_original(user_slug : str, session : sessionDP, request: Re
 
     try:
         slug = session.exec(select(URLS).where(URLS.slug == user_slug)).first()
+        ua_string = request.headers.get('user-Agent')
+        user_agent = parse(ua_string)
+
+        device = 'Mobile' if user_agent.is_mobile  else 'Table' if user_agent.is_tablet else 'PC'
+        os = user_agent.os.family
+        browser = user_agent.browser.family
+
+        print(os)
+        print(browser)
 
         if not slug:
             return {'msg': 'URL não encontrada ou expirada'}
@@ -182,7 +203,7 @@ async def redirect_to_original(user_slug : str, session : sessionDP, request: Re
         new_click = Clicks(shortned_url_id=slug.id,
                         ip_address=client_ip_address,
                         city=city,
-                        country=country)
+                        country=country, device=device)
         
         session.add(new_click)
         session.commit()
@@ -281,46 +302,62 @@ async def login(user: LoginData, session : sessionDP):
 
 @app.get('/dashboard')
 @token_required
-async def dashboard(request: Request, session : sessionDP):
+async def dashboard(request: Request, session: sessionDP, page: int):
+    user_id = request.state.user_id
+    per_page = 3
+    offset = (page - 1) * per_page
+
+    data = session.exec(select(Users).where(Users.id == user_id)).first()
+
+    total_urls = get_total_urls(session, user_id)
+    total_clicks = get_total_clicks(session, user_id)
+    unique_clicks = get_unique_clicks(session, user_id)
+    clicks_last_7d = get_7d_clicks(session, user_id)
+    unique_clicks_7d = get_unique_clicks_7d(session, user_id)
+    clicks_by_devices = get_clicks_by_devices(session, user_id)
+    clicks_by_cities = get_clicks_by_cities(session, user_id)
+ 
+
+    urls_page = get_url_pages(session, user_id, offset)
+
+    urls_serialized = serialize_urls(urls_page)
+    serialized_7d = serialize_7d_clicks(clicks_last_7d)
+    serialized_unique_7d = serialize_7d_clicks(unique_clicks_7d)
+    serialized_device = serialize_device(clicks_by_devices)
+    city_serialized = serialize_cities(clicks_by_cities)
     
+
+    print(city_serialized)
+
+    return {
+        'user_data': data,
+        'all_urls': {
+            'urls': urls_serialized,
+            'total_urls': total_urls,
+            'page': page,
+            'total_pages': ceil(total_urls / per_page),
+            'seven_days_clicks': serialized_7d,
+            'unique_7d_clicks': serialized_unique_7d,
+            'devices': serialized_device,
+            'cities': city_serialized      
+        },
+        'header': {
+            'total_clicks': total_clicks,
+            'unique_clicks': unique_clicks,
+        },
+        'status_code': 201
+    }
+
+@app.delete('/delete_url')
+async def delete_url(id : int, session : sessionDP):
+
     try:
-        user_id = request.state.user_id
-        data = session.exec(select(Users).where(Users.id == user_id)).first()
-        urls = session.exec(select(URLS).where(URLS.user_id == user_id)).all()
+       session.exec(delete(URLS).where(URLS.id == id))
+       session.commit()
 
-        all_URLS_serialized = [{'original_url': url.original_url, 'data': get_year_month_day(url.created_at), 'slug': url.slug,
-                                 'shortened_url': generate_shorten_url(slug=url.slug, url=url.original_url)} for url in urls]
-        
+       return {'msg': 'URL removida com sucesso', 'status_code': 201}
 
-        statement = (
-            select(URLS.slug, func.count(Clicks.id))
-            .join(URLS, Clicks.shortned_url_id == URLS.id)
-            .group_by(Clicks.shortned_url_id)
-        )
-
-        results = session.exec(statement).all()
-        total_clicks = session.exec(select(func.count(Clicks.id)).join(URLS, URLS.id == Clicks.shortned_url_id)
-                                    .where(URLS.user_id == user_id)).one()
-
-        total_by_country = session.exec(
-                                        select(func.count(Clicks.country))
-                                        .join(URLS, URLS.id == Clicks.shortned_url_id)
-                                        .where(URLS.user_id == user_id)).one()
-
-        total_unique_clicks = session.exec(select(func.count(distinct(Clicks.ip_address)))
-                                           .join(URLS, URLS.user_id == user_id)
-                                           .where(URLS.id == user_id)).one()
-
-    
-        header = {'total_click': total_clicks, 'unique_clicks': total_unique_clicks, 'total_click_country': total_by_country}
-
-        return {'msg': 'Rota de redirecionamento',
-                'user_data': data,
-                'all_urls': all_URLS_serialized,
-                'header': header}
-       
     except Exception as e:
-        return
-    
-
-    
+        session.rollback()
+        print('Houve um erro ao eliminar url', str(e))
+        return {'erro': 'Não foi possível remover a url' , 'error': str(e)}

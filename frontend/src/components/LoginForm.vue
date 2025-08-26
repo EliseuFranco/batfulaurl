@@ -67,7 +67,7 @@
             return
         }
         localStorage.setItem('token', data.token)
-        window.location.href = 'http://localhost:5173/dashboard'
+        window.location.href = 'https://batfulaurl-backend.onrender.com/dashboard'
 
     }
 

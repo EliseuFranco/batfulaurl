@@ -5,7 +5,7 @@ from sqlmodel import SQLModel, Field, create_engine, Session, select, delete, up
 from models.clicks_model import Clicks
 from models.urls_model import URLS
 from models.user_model import Users
-from backend.utils import get_year_month_day
+from .utils import get_year_month_day
 from urllib.parse import urlparse
 from datetime import datetime, timedelta
 

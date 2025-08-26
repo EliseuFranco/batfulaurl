@@ -32,7 +32,7 @@
             <h2 class="text-xl font-semibold text-white">Visitantes únicos</h2>
         </div>  
         <p class="text-3xl font-bold mt-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-200">
-          {{ metrica.unique_users }}
+          {{ metrica.unique_users || 0 }}
         </p>
       </div>
       

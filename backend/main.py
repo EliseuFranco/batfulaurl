@@ -67,7 +67,8 @@ sessionDP = Annotated[Session, Depends(get_session)]
 app = FastAPI(lifespan=lifespan)
 
 origins = [
-    'http://localhost:5173'
+    'http://localhost:5173',
+    "https://batfulaurl-frontend.onrender.com"
 ]
 
 app.add_middleware(

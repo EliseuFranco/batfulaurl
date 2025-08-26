@@ -1,18 +1,18 @@
 from fastapi import FastAPI, Depends, Request
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
-from sqlmodel import SQLModel, Field, create_engine, Session, select, delete, update, func, distinct, and_
+from sqlmodel import SQLModel, create_engine, Session, select, delete, update, func, distinct, and_
 from typing import Annotated, Optional
 from urllib.parse import urlparse
 from random import choice
 from string import ascii_letters , digits
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from utils import *
+from .utils import *
 from models.urls_model import URLS
 from models.clicks_model import Clicks
 from models.user_model import Users
-from services import *
+from .services import *
 from math import ceil
 from user_agents import parse
 
@@ -41,7 +41,7 @@ class Pagination(BaseModel):
     page : int 
 
 db_name = 'url_db.db'
-database_url = f'sqlite:///{db_name}'
+database_url = f'sqlite:///backend/{db_name}'
 
 connect_args = {"check_same_thread": False}
 engine = create_engine(database_url, connect_args=connect_args)
@@ -218,8 +218,7 @@ async def redirect_to_original(user_slug : str, session : sessionDP, request: Re
         
 @app.get('/metrics')
 async def get_metrics(session : sessionDP):
-    from utils import get_metric_number
-
+   
     try:
 
         total_shortned_urls = session.exec(select(func.count(URLS.slug))).all() or []

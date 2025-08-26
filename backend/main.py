@@ -8,11 +8,11 @@ from random import choice
 from string import ascii_letters , digits
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from .utils import *
+from backend.utils import *
 from models.urls_model import URLS
 from models.clicks_model import Clicks
 from models.user_model import Users
-from .services import *
+from backend.services import *
 from math import ceil
 from user_agents import parse
 

@@ -51,7 +51,7 @@
 
         const user_to_login = {email: email.value, password_hash: password.value}
 
-        const request = await fetch('https://batfulaurl-backend.onrender.com/login', {
+        const request = await fetch('http://127.0.0.1:8000/login', {
 
             method: 'POST',
             headers: {
@@ -67,7 +67,7 @@
             return
         }
         localStorage.setItem('token', data.token)
-        window.location.href = 'https://batfulaurl-backend.onrender.com/dashboard'
+        window.location.href = 'http://localhost:5173/dashboard'
 
     }
 

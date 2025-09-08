@@ -188,8 +188,6 @@ async def redirect_to_original(user_slug : str, session : sessionDP, request: Re
         os = user_agent.os.family
         browser = user_agent.browser.family
 
-        print(os)
-        print(browser)
 
         if not slug:
             return {'msg': 'URL não encontrada ou expirada'}

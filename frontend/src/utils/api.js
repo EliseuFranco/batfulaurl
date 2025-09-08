@@ -64,7 +64,6 @@ const getUserData = async function(page){
             return {msg: 'Erro ao obter dados do usuário'}
         }
 
-
     }
 
 export {create_url, getUserData}

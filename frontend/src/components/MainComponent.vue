@@ -40,6 +40,9 @@
           <div ref="faqs">
             <FAQ />
           </div>
+          <div ref="footer">
+            <FooterComponent />
+          </div>
           
     </section>
 </template>
@@ -57,6 +60,7 @@
     import { eventBus, createMask, copyToClipBoard } from '../utils/extensions';
     import Call from './Call.vue';
     import {create_url} from '../utils/api.js'
+    import FooterComponent from './FooterComponent.vue';
 
 
     const msg = ref('')

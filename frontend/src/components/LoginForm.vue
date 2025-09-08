@@ -40,12 +40,13 @@
     import { ref, onMounted } from 'vue';
     import Message from './Message.vue'
     import { eventBus } from '../utils/extensions';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
 
     const email = ref('')
     const password = ref('')
     const msg = ref('')
     const route = useRoute()
+    const router = useRouter()
 
     const login = async function() {
 
@@ -68,7 +69,8 @@
             return
         }
         localStorage.setItem('token', data.token)
-        window.location.href = `${apiUrl}/dashboard`
+        router.push("/dashboard")
+
 
     }
 

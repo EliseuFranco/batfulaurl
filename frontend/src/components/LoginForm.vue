@@ -63,11 +63,12 @@
         const data = await request.json()
 
         if (!data.token){
-            msg.value = data.msg
+            msg.value = data.msg;
             return
         }
         localStorage.setItem('token', data.token)
-        window.location.href = 'http://localhost:5173/dashboard'
+        const apiUrl = import.meta.env.VITE_API_URL;
+        window.location.href = `${apiUrl}/dashboard`
 
     }
 
@@ -77,6 +78,7 @@
         } else if(route.query.sessionExpired){
             msg.value = 'Sua sessão expirou, faça login novamente'
         }
+        
     })
 
 

@@ -60,8 +60,9 @@
             return
         }
         const userToCreate = {nome: nome.value, email: email.value, password_hash: password.value}
-
-        const request = await fetch('http://127.0.0.1:8000/create', {
+        
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const request = await fetch(`${apiUrl}/create`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'

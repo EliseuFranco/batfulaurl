@@ -1,11 +1,12 @@
 
+const apiUrl = import.meta.env.VITE_API_URL
 
 const create_url = async function(data) {
       
     console.log(data)
     
       try {
-        const request = await fetch('http://127.0.0.1:8000/create_shorten_url', {
+        const request = await fetch(`${apiUrl}/create_shorten_url`, {
             method: 'POST',
             headers: {
             'Authorization': `Bearer ${data.token}`,
@@ -40,8 +41,8 @@ const getUserData = async function(page){
         try {
 
             const token = localStorage.getItem('token')
-
-            const resquetToken = await fetch(`http://127.0.0.1:8000/dashboard?page=${page}`, {
+            
+            const resquetToken = await fetch(`${apiUrl}/dashboard?page=${page}`, {
                 headers : {
                     'Authorization': `Bearer ${token}`
                 }

@@ -67,8 +67,8 @@
     const faqs = ref('')
     const url_created = ref('')
     const refrehMetrics = ref(0)
+    
 
-   
     const clearMessage = function(){
       msg.value = ''
     }
@@ -79,6 +79,7 @@
         const token = localStorage.getItem('token')
         data.token = token
         const responseData = await create_url(data)
+        
 
         if(!responseData.shortened_url){
             msg.value = 'Não foi possível estabelecer ligação com o servidor'

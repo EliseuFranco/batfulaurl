@@ -101,8 +101,8 @@
     const listUserURL = async function(){
 
             const token = localStorage.getItem('token')
-
-            const resquetToken = await fetch(`http://127.0.0.1:8000/dashboard?page=${currantPage.value}`, {
+            const apiUrl = import.meta.env.VITE_API_URL
+            const resquetToken = await fetch(`${apiUrl}/dashboard?page=${currantPage.value}`, {
             headers : {
                 'Authorization': `Bearer ${token}`
             }
@@ -118,5 +118,6 @@
     }
 
     onMounted(async () => listUserURL())
+   
 
 </script>

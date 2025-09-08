@@ -19,7 +19,7 @@
                 </form>
                 <div class="bg-gradient-to-r from-purple-950 to-purple-600 w-full p-10 md:rounded-r-xl flex flex-col rounded-bl-xl rounded-br-xl md:
                  md:rounded-bl-none text-sm">
-                    <p>Não tem uma conta ? <a href="/register" class="font-semibold underline">Criar conta</a></p>
+                    <p>Não tem uma conta ? <router-link to="/register" class="font-semibold underline">Criar conta</router-link></p>
                     <p>E começa a impulsionar as tuas campnhas de marketing</p>
                     <ul class="list-none mt-2">
                         <li class="before:content-['✓']"> Encurtar urls</li>

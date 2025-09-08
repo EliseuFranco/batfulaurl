@@ -26,7 +26,7 @@
                 </form>
                 <div class="bg-gradient-to-r from-purple-950 to-purple-600 w-full p-10 md:rounded-r-xl flex flex-col rounded-bl-xl rounded-br-xl md:
                  md:rounded-bl-none text-sm items-center justify-center">
-                    <p>Já tem uma conta? <a href="/login" class="font-semibold underline">Iniciar sessão</a></p>
+                    <p>Já tem uma conta? <router-link to="/login" class="font-semibold underline">Iniciar sessão</router-link></p>
                     <p class="text-center mt-2">E visualize as métricas das suas campanhas de marketing</p>
                 </div>
             </div>

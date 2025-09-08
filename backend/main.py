@@ -70,7 +70,9 @@ origins = [
     'http://localhost:5173',
     "https://batfulaurl-frontend.onrender.com",
     "https://batfulaurl.vercel.app",
-    'https://batfulaurl-git-main-eliseu-samulolos-projects.vercel.app'
+    'https://batfulaurl-git-main-eliseu-samulolos-projects.vercel.app',
+    "https://batfulaurl-ek7u9n2b4-eliseu-samulolos-projects.vercel.app"
+
 ]
 
 app.add_middleware(

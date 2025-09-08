@@ -68,7 +68,8 @@ app = FastAPI(lifespan=lifespan)
 
 origins = [
     'http://localhost:5173',
-    "https://batfulaurl-frontend.onrender.com"
+    "https://batfulaurl-frontend.onrender.com",
+    "https://batfulaurl.vercel.app"
 ]
 
 app.add_middleware(

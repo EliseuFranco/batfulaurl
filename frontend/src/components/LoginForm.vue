@@ -50,8 +50,9 @@
     const login = async function() {
 
         const user_to_login = {email: email.value, password_hash: password.value}
+        const apiUrl = import.meta.env.VITE_API_URL
 
-        const request = await fetch('http://127.0.0.1:8000/login', {
+        const request = await fetch(`${apiUrl}/login`, {
 
             method: 'POST',
             headers: {
@@ -67,7 +68,6 @@
             return
         }
         localStorage.setItem('token', data.token)
-        const apiUrl = import.meta.env.VITE_API_URL;
         window.location.href = `${apiUrl}/dashboard`
 
     }

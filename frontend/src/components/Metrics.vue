@@ -53,7 +53,8 @@ const metrica = ref({})
 
 const getMetrics = async function () {
   try {
-    const request = await fetch('http://127.0.0.1:8000/metrics', { method: 'GET' })
+    const urlApi = import.meta.env.VITE_API_URL
+    const request = await fetch(`${urlApi}/metrics`, { method: 'GET' })
 
     if (!request.ok) {
       emits('metrics', 'Não foi possível carregar dados')

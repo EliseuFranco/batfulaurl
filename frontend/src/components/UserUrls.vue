@@ -82,7 +82,7 @@
 
   const props = defineProps({
       urls : {
-        type: Object
+        type: Array
       },
       pages: {
         type: Object,

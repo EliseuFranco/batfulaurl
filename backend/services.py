@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, Request
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
-from sqlmodel import SQLModel, Field, create_engine, Session, select, delete, update, func, distinct, and_
+from sqlmodel import SQLModel, Field, create_engine, Session, select, delete, update, func, distinct, and_, extract
 from models.clicks_model import Clicks
 from models.urls_model import URLS
 from models.user_model import Users
@@ -78,7 +78,7 @@ def get_url_pages(session, user_id, offset,per_page=3):
         )
         .join(Clicks, URLS.id == Clicks.shortned_url_id, isouter=True) 
         .where(URLS.user_id == user_id)
-        .group_by(URLS.slug, URLS.created_at, URLS.original_url)
+        .group_by(URLS.slug, URLS.created_at, URLS.original_url, URLS.id)
         .order_by(URLS.created_at.desc())
         .limit(per_page)
         .offset(offset)
@@ -120,10 +120,10 @@ def get_clicks_by_devices(session, user_id):
 def get_clicks_by_cities(session, user_id):
     return session.exec(
         select(Clicks.city,
-                func.strftime('%H', Clicks.clicked_at)
+                extract("hour", Clicks.clicked_at)
                 ,func.count(Clicks.id).label('total_clicks'),
                 func.count(distinct(Clicks.city)))
                 .join(URLS, URLS.id == Clicks.shortned_url_id)
                 .where(URLS.user_id == user_id).
-                group_by(func.strftime('%H', Clicks.clicked_at), Clicks.city)
+                group_by(extract('hour', Clicks.clicked_at), Clicks.city)
     ).all()

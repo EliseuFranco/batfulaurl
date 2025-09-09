@@ -42,10 +42,11 @@ class Pagination(BaseModel):
 
 db_name = 'url_db.db'
 DATABASE_URL = os.getenv("DATABASE_URL")
-database_url = f'sqlite:///backend/{db_name}'
+database_url = "postgresql://batfula_db_5vse_user:QqmjbNAaQXo8a5a7wJ1WueXQFuHWftK4@dpg-d2vop6odl3ps739dq4pg-a.oregon-postgres.render.com/batfula_db_5vse"
+#f'sqlite:///backend/{db_name}' 
 
 connect_args = {"check_same_thread": False} #Apenas funciona para SQLITE
-engine = create_engine(DATABASE_URL)
+engine = create_engine(database_url)
 
 
 

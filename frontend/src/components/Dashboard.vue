@@ -108,6 +108,11 @@
         })
         const tokenData = await resquetToken.json()
 
+        console.log("Dados: ",tokenData)
+
+        if(tokenData.error){
+            msg.value = "Não fopinpssível realizar login, erro na comunicação com o servidor"
+        }
         all_urls.value = tokenData.all_urls.urls || []
         header.value = tokenData.header || {}
         areaChartData.value = tokenData.all_urls.seven_days_clicks || []
@@ -119,7 +124,7 @@
             page: tokenData.all_urls.page,
             total_pages: tokenData.all_urls.total_pages
         }
-        console.log("Dados: ",tokenData)
+       
     }
 
 

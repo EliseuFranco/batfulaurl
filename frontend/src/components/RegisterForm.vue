@@ -22,7 +22,7 @@
                         <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirmar palavra-passe" class="border border-zinc-700 p-2 rounded-xl" v-model="passwordConfirmation" required>
                         <span class="text-xs text-red-400">{{ errorMsg }}</span>
                     </div>
-                    <button class="bg-purple-800 w-full mt-5 p-2 rounded-xl cursor-pointer hover:bg-purple-900">Iniciar sessão</button>
+                    <button class="bg-purple-800 w-full mt-5 p-2 rounded-xl cursor-pointer hover:bg-purple-900">Criar conta</button>
                 </form>
                 <div class="bg-gradient-to-r from-purple-950 to-purple-600 w-full p-10 md:rounded-r-xl flex flex-col rounded-bl-xl rounded-br-xl md:
                  md:rounded-bl-none text-sm items-center justify-center">

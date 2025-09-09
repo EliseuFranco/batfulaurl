@@ -85,6 +85,7 @@
             msg.value = data.error
             return
         }
+        await listUserURL()
         console.log('URL criada: ', data)
     }
 

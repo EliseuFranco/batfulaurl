@@ -35,7 +35,7 @@
                             <path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
                     </span>
                 </div>
-                <h1 class="font-bold text-2xl">{{ calcConversionRate(data.unique_clicks, data.total_clicks) }} || 0 %</h1>
+                <h1 class="font-bold text-2xl">{{ calcConversionRate(data.unique_clicks, data.total_clicks) }}%</h1>
                 <p class="text-xs text-zinc-400"><span class="text-green-400">15.4</span> % vs o mês anterior</p>
             </div>
             <div class="border border-zinc-900 p-5 rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm">

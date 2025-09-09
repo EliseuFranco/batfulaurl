@@ -98,24 +98,22 @@
     eventBus.on('close', toggleModal)
     eventBus.on('ScrollToUrls', scrollToUrl)
 
-    const listUserURL = async function(){
-
-            const token = localStorage.getItem('token')
-            const apiUrl = import.meta.env.VITE_API_URL
-            const resquetToken = await fetch(`${apiUrl}/dashboard?page=${currantPage.value}`, {
-            headers : {
-                'Authorization': `Bearer ${token}`
-            }
+    const listUserURL = async function() {
+        const token = localStorage.getItem('token')
+        const apiUrl = import.meta.env.VITE_API_URL
+        const resquetToken = await fetch(`${apiUrl}/dashboard?page=${currantPage.value}`, {
+            headers : { 'Authorization': `Bearer ${token}` }
         })
         const tokenData = await resquetToken.json()
-        all_urls.value = tokenData.all_urls
-        header.value = tokenData.header
-        areaChartData.value= tokenData.all_urls.seven_days_clicks
-        areaData2.value = tokenData.all_urls.unique_7d_clicks
-        devices.value = tokenData.all_urls.devices
-        cities.value = tokenData.all_urls.cities
 
+        all_urls.value = tokenData.all_urls.urls || []
+        header.value = tokenData.header || {}
+        areaChartData.value = tokenData.all_urls.seven_days_clicks || []
+        areaData2.value = tokenData.all_urls.unique_7d_clicks || []
+        devices.value = tokenData.all_urls.devices || []
+        cities.value = tokenData.all_urls.cities || []
     }
+
 
     onMounted(async () => listUserURL())
    

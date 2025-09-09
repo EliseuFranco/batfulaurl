@@ -42,11 +42,10 @@ class Pagination(BaseModel):
 
 db_name = 'url_db.db'
 DATABASE_URL = os.getenv("SUPABASE_POSTGRES_SECRET")
-database_url = DATABASE_URL
-#f'sqlite:///backend/{db_name}'
+#database_url = f'sqlite:///backend/{db_name}'
 
 connect_args = {"check_same_thread": False} #Apenas funciona para SQLITE
-engine = create_engine(database_url)
+engine = create_engine(DATABASE_URL, echo=True)
 
 
 def db_create_all():

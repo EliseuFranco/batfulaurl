@@ -41,7 +41,9 @@ class Pagination(BaseModel):
     page : int 
 
 db_name = 'url_db.db'
-database_url = f'sqlite:///backend/{db_name}'
+DATABASE_URL = os.getenv("SUPABASE_POSTGRES_SECRET")
+database_url = DATABASE_URL
+#f'sqlite:///backend/{db_name}'
 
 connect_args = {"check_same_thread": False}
 engine = create_engine(database_url, connect_args=connect_args)

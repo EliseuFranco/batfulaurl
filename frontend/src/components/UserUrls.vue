@@ -16,7 +16,7 @@
                       {{ createMask(url.original_url) }}
                     </a>
                     <p class="text-zinc-300 mt-2 text-sm">Encurtada:</p>
-                      <a :href="'http://127.0.0.1:8000/redirect?user_slug=' + url.slug" target="_blank" class="text-purple-500 break-all hover:underline">
+                      <a :href="`${apiUrl}/redirect?user_slug=` + url.slug" target="_blank" class="text-purple-500 break-all hover:underline">
                       {{ url.shortened_url }}
                       </a>
                 </div>
@@ -79,6 +79,7 @@
   const emits = defineEmits(['page'])
   const openConfirmation = ref(false)
   const urlIDtoDelete = ref(0)
+  const apiUrl = ref(import.meta.env.VITE_API_URL)
 
   const props = defineProps({
       urls : {

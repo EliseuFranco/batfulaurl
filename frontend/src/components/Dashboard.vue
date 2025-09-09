@@ -113,6 +113,8 @@
         areaData2.value = tokenData.all_urls.unique_7d_clicks || []
         devices.value = tokenData.all_urls.devices || []
         cities.value = tokenData.all_urls.cities || []
+
+        console.log("Dados: ",tokenData)
     }
 
 

@@ -312,7 +312,7 @@ async def dashboard(request: Request, session: sessionDP, page: int):
 
     data = session.exec(select(Users).where(Users.id == user_id)).first()
 
-    total_urls = get_total_urls(session, user_id)
+    total_urls = get_total_urls(session, user_id) 
     total_clicks = get_total_clicks(session, user_id)
     unique_clicks = get_unique_clicks(session, user_id)
     clicks_last_7d = get_7d_clicks(session, user_id)
@@ -323,11 +323,12 @@ async def dashboard(request: Request, session: sessionDP, page: int):
 
     urls_page = get_url_pages(session, user_id, offset)
 
-    urls_serialized = serialize_urls(urls_page)
-    serialized_7d = serialize_7d_clicks(clicks_last_7d)
-    serialized_unique_7d = serialize_7d_clicks(unique_clicks_7d)
-    serialized_device = serialize_device(clicks_by_devices)
-    city_serialized = serialize_cities(clicks_by_cities)
+    urls_serialized = serialize_urls(urls_page) or []
+    serialized_7d = serialize_7d_clicks(clicks_last_7d) or []
+    serialized_unique_7d = serialize_7d_clicks(unique_clicks_7d) or []
+    serialized_device = serialize_device(clicks_by_devices) or []
+    city_serialized = serialize_cities(clicks_by_cities) or []
+
     
     return {
         'user_data': data,

@@ -73,7 +73,7 @@ origins = [
     "https://batfulaurl.vercel.app",
     'https://batfulaurl-git-main-eliseu-samulolos-projects.vercel.app',
     "https://batfulaurl-ek7u9n2b4-eliseu-samulolos-projects.vercel.app",
-    'https://batfulaurl.onrender.com/'
+    'https://batfulaurl.onrender.com'
 
 ]
 

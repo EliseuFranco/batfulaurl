@@ -108,8 +108,6 @@
         })
         const tokenData = await resquetToken.json()
 
-        console.log("Dados: ",tokenData)
-
         if(tokenData.error){
             msg.value = "Não fopinpssível realizar login, erro na comunicação com o servidor"
         }

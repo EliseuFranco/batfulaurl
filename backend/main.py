@@ -45,7 +45,8 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 database_url = f'sqlite:///backend/{db_name}'
 
 connect_args = {"check_same_thread": False} #Apenas funciona para SQLITE
-engine = create_engine(database_url, connect_args=connect_args)
+engine = create_engine(DATABASE_URL)
+
 
 
 def db_create_all():

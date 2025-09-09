@@ -27,7 +27,7 @@
             <CityTable class="grow" :data="cities"/>
         </div>
         <div ref="userUrl">
-            <UserUrls :urls="all_urls" @page="handlerPage"/>
+            <UserUrls :urls="all_urls" @page="handlerPage" :pages="pageInfo"/>
         </div>
     </section>
 </template>
@@ -59,6 +59,7 @@
     const areaData2 = ref([])
     const devices = ref([])
     const cities = ref([])
+     const pageInfo = ref()
 
     
     const sendEvent = function(){
@@ -114,6 +115,10 @@
         devices.value = tokenData.all_urls.devices || []
         cities.value = tokenData.all_urls.cities || []
 
+        pageInfo.value = {
+            page: tokenData.all_urls.page,
+            total_pages: tokenData.all_urls.total_pages
+        }
         console.log("Dados: ",tokenData)
     }
 

@@ -10,7 +10,7 @@
                             <path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg>
                     </span>
                 </div>
-                <h1 class="font-bold text-2xl">{{ data.total_clicks || 0 }}</h1>
+                <h1 class="font-bold text-2xl">{{ data.total_clicks || 0  }}</h1>
                 <p class="text-xs text-zinc-400"><span class="text-green-400">15.4</span> % vs o mês anterior</p>
             </div>
             <div class="border border-zinc-900 p-5 rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm">

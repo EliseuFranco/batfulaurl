@@ -54,6 +54,8 @@ const metrica = ref({})
 const getMetrics = async function () {
   try {
     const urlApi = import.meta.env.VITE_API_URL
+    console.log(urlApi)
+
     const request = await fetch(`${urlApi}/metrics`, { method: 'GET' })
 
     if (!request.ok) {

@@ -2,15 +2,12 @@
 
     <footer>
         <div class="text-zinc-500 p-10 mt-20 max-w-5xl mx-auto gap-20">
-            <div class="flex items-center justify-between w-full max-w-4xl p-5">
+            <div class="grid md:grid-cols-3 md:gap-5 gap-2 justify-between w-full max-w-4xl p-5">
                 <div class="flex flex-col gap-2">
                     <h3 class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-200 font-bold">Batfulaurl</h3>
                     <div>
                         Batfulaurl &copy;{{ new Date().getFullYear() }} todos os direitos reservados
                     </div>
-                </div>
-                <div>
-                    <h3>Sentchu ur</h3>
                 </div>
                 <div class="flex flex-col gap-2">
                     <h3>Redes sociais</h3>

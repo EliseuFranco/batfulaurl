@@ -183,39 +183,61 @@ async def original_url(request : ShortenUrlRequest, session : sessionDP):
         return {'msg': 'Houve um erro ao recuperar url', 'error': str(e)} 
 
 
+import logging
 
-@app.get('/redirect')
-async def redirect_to_original(user_slug : str, session : sessionDP, request: Request):
-
+@app.get("/redirect")
+async def redirect_to_original(user_slug: str, session: sessionDP, request: Request):
     try:
+        # 1. Buscar slug da BD
         slug = session.exec(select(URLS).where(URLS.slug == user_slug)).first()
-        ua_string = request.headers.get('user-Agent')
-        user_agent = parse(ua_string)
-
-        device = 'Mobile' if user_agent.is_mobile  else 'Table' if user_agent.is_tablet else 'PC'
-        os = user_agent.os.family
-        browser = user_agent.browser.family
-
-
         if not slug:
-            return {'msg': 'URL não encontrada ou expirada'}
-        
-        client_ip_address = request.client.host or '0.0.0.0'
+            return {"msg": "URL não encontrada ou expirada"}
 
-        client_address = get_client_data(client_ip_address)
-        city = client_address['location']['city'] 
-        country = client_address['location']['country']
 
-            
-        new_click = Clicks(shortned_url_id=slug.id,
-                        ip_address=client_ip_address,
-                        city=city,
-                        country=country, device=device)
-        
+        ua_string = request.headers.get("user-agent") or request.headers.get("User-Agent") or ""
+        logging.info(f"User-Agent recebido: {ua_string}")
+
+        user_agent = parse(ua_string) if ua_string else None
+
+        device = "Desconhecido"
+        os = "Desconhecido"
+        browser = "Desconhecido"
+
+        if user_agent:
+            device = "Mobile" if user_agent.is_mobile else "Tablet" if user_agent.is_tablet else "PC"
+            os = user_agent.os.family
+            browser = user_agent.browser.family
+
+    
+        client_ip_address = request.client.host or "0.0.0.0"
+        logging.info(f"IP do cliente: {client_ip_address}")
+
+        try:
+            client_address = get_client_data(client_ip_address)
+            city = client_address.get("location", {}).get("city", "Desconhecida")
+            country = client_address.get("location", {}).get("country", "Desconhecido")
+        except Exception as e:
+            logging.error(f"Erro a obter geolocalização: {e}")
+            city, country = "Desconhecida", "Desconhecido"
+
+        new_click = Clicks(
+            shortned_url_id=slug.id,
+            ip_address=client_ip_address,
+            city=city,
+            country=country,
+            device=device,
+        )
+
         session.add(new_click)
         session.commit()
 
+        logging.info(f"Redirect para {slug.original_url}")
         return RedirectResponse(slug.original_url)
+
+    except Exception as e:
+        logging.error(f"Erro inesperado: {e}")
+        return {"msg": f"Algo correu mal: {str(e)}"}
+
 
         
     except Exception as e:

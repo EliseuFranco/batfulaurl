@@ -216,6 +216,7 @@ async def redirect_to_original(user_slug: str, session: sessionDP, request: Requ
             client_address = get_client_data(client_ip_address)
             city = client_address.get("location", {}).get("city", "Desconhecida")
             country = client_address.get("location", {}).get("country", "Desconhecido")
+
         except Exception as e:
             logging.error(f"Erro a obter geolocalização: {e}")
             city, country = "Desconhecida", "Desconhecido"
@@ -236,7 +237,7 @@ async def redirect_to_original(user_slug: str, session: sessionDP, request: Requ
 
     except Exception as e:
         logging.error(f"Erro inesperado: {e}")
-        return {"msg": f"Algo correu mal: {str(e)}"}
+        return {"msg": f"Algo correu mal: {str(e)}", 'erro': str(e)}
 
 
         

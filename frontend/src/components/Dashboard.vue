@@ -27,7 +27,7 @@
             <CityTable class="grow" :data="cities"/>
         </div>
         <div ref="userUrl">
-            <UserUrls :urls="all_urls" @page="handlerPage" :pages="pageInfo"/>
+            <UserUrls :urls="all_urls" @page="handlerPage" :pages="pageInfo" @message="handlerCopyMessage"/>
         </div>
     </section>
 </template>
@@ -123,6 +123,15 @@
             total_pages: tokenData.all_urls.total_pages
         }
        
+    }
+
+    const handlerCopyMessage = function(message){
+        msg.value = message;
+        console.log(message)
+
+        setTimeout(()=> {
+            msg.value = ''
+        }, 1500)
     }
 
 

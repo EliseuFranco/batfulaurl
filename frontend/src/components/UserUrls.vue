@@ -22,7 +22,7 @@
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round"
-                 class="lucide lucide-copy-icon lucide-copy cursor-pointer" @click="copyToClipBoard(url.shortened_url)">
+                 class="lucide lucide-copy-icon lucide-copy cursor-pointer" @click="handlerCopy(url.slug)">
                   <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
                   <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
             </div>
@@ -76,7 +76,7 @@
   import ConfirmationModal from './ConfirmationModal.vue'
   
   const currentPage = ref(1)
-  const emits = defineEmits(['page'])
+  const emits = defineEmits(['page','message'])
   const openConfirmation = ref(false)
   const urlIDtoDelete = ref(0)
   const apiUrl = ref(import.meta.env.VITE_API_URL)
@@ -101,7 +101,9 @@
     const handlerConfirmation = async function(){
 
       try {
-          const request = await fetch(`http://127.0.0.1:8000/delete_url?id=${urlIDtoDelete.value}`, {
+
+        const apiURL = import.meta.env.VITE_API_URL
+          const request = await fetch(`${apiURL}/delete_url?id=${urlIDtoDelete.value}`, {
             method : 'DELETE'
           })
           
@@ -128,5 +130,10 @@
     const openModal = function(id){
       urlIDtoDelete.value = id
       openConfirmation.value = !ConfirmationModal.value
+    }
+
+    const handlerCopy = async function(slug){
+        const message = await copyToClipBoard(slug)
+        emits('message', message)
     }
 </script>

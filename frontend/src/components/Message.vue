@@ -1,8 +1,8 @@
 <template>
 
-    <section v-if="msg" class="fixed w-full flex top-0 p-2 justify-center">
-        <div class="bg-purple-500 p-2 rounded ">
-            <p class="text-white">{{ msg }}</p>
+    <section v-if="msg" class="w-full flex justify-center items-center relative bg-blue-200">
+        <div class="bg-purple-900 p-2 fixed top-5 rounded w-40">
+            <p class="text-white text-sm text-center">{{ msg }}</p>
         </div>
     </section>
 

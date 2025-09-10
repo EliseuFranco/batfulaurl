@@ -7,8 +7,9 @@ const eventBus = mitt()
 
 const copyToClipBoard = async function(text) {
     try{
-        navigator.clipboard.writeText(text)
-        return 'Copiado para área de transferência'
+        const urlToredirect = `${import.meta.env.VITE_API_URL}/redirect?user_slug=${text}`
+        navigator.clipboard.writeText(urlToredirect)
+        return 'Copiado'
     }
     catch(error){
         console.log("Algo correu mal", error)

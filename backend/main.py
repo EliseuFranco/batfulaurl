@@ -188,7 +188,7 @@ import logging
 @app.get("/redirect")
 async def redirect_to_original(user_slug: str, session: sessionDP, request: Request):
     try:
-        # 1. Buscar slug da BD
+        
         slug = session.exec(select(URLS).where(URLS.slug == user_slug)).first()
         if not slug:
             return {"msg": "URL não encontrada ou expirada"}

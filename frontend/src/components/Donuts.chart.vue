@@ -21,7 +21,7 @@
     })
 
     const series = computed(() => props.data.map(valor => Object.values(valor)).flat())
-    const labels = computed(() => props.data.map(keys => Object.keys(keys)).flat())
+    const labels = computed(() => props.data.map(keys => Object.keys(keys)).flat()).value
 
     const chartOptions = ref({
         chart: {
@@ -30,7 +30,7 @@
         legend: {
             position:'bottom'
         },
-        labels: labels.value,
+        labels: labels,
         colors: ['#6b26d9', '#6666ff', '#b447eb']
     })
 

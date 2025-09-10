@@ -1,7 +1,7 @@
 <template>
        <section class="">
            <nav v-if="$route.fullPath === '/'" class="text-zinc-500 text-sm rounded-2xl p-5">
-                <div class="flex flex-wrap flex-row items-center flex-wrap justify-between  gap-3 p-5 md:justify-center font-semibold bg-zinc-900 rounded-2xl">
+                <div class="flex flex-wrap flex-row items-center flex-wrap justify-between  gap-3 p-5 md:justify-center font-semibold bg-zinc-900 rounded-2xl sticky">
                     <div class="">
                         <h1 class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-200 text-xl font-bold">BatfulaURL</h1>
                     </div>

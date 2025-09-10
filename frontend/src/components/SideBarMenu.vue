@@ -1,7 +1,6 @@
 <template>
   <nav class="bg-zinc-900 text-white fixed top-0 p-3 z-50 h-dvh md:p-5 md:z-0 md:sticky md:w-64 transform
-    transition-all ease-in-out duration-500" :class="{ 'overflow-x-hidden -ml-64 w-0 p-0': !isOpen }">
-
+    transition-all ease-in-out duration-500" :class="{ 'overflow-x-hidden -ml-64 p-0': !isOpen, 'w-96': isOpen }">
     <div class="flex flex-col gap-4 h-full">
       <div class="flex items-center justify-between w-full p-2">
         <p class="font-semibold text-sm">Company logo</p>

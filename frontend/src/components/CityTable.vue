@@ -1,5 +1,5 @@
 <template>
-  <section class="p-10 text-white">
+  <section class="p-3 md:p-10 text-white">
     <table class="w-full h-full border border-white bg-zinc-900 rounded-xl overflow-hidden text-sm text-zinc-200">
       <thead class="bg-zinc-800 text-left">
         <tr>

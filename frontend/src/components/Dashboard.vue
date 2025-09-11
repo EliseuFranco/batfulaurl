@@ -15,7 +15,7 @@
                 </div>
                 <p>Monitore o desempenho das suas URLs curtas com insights detalhados</p>
         </div>
-        <div class="p-10 grow">
+        <div class="p-3 grow">
             <MetrictsCards :data="header"/>
         </div>
         <div class="flex flex-col lg:flex-row items-center lg:p-5">
@@ -122,7 +122,7 @@
         devices.value = tokenData.all_urls.devices || []
         cities.value = tokenData.all_urls.cities || []
 
-        
+
         // pageInfo.value = {
         //     page: tokenData.all_urls.page,
         //     total_pages: tokenData.all_urls.total_pages

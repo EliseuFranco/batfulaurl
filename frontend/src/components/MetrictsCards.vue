@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-5 -mt-5">
-            <div class="border border-zinc-900 p-5 rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm">
+            <div class="border border-zinc-900 bg-blue-200 p-3 md:p-5 rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm">
                 <div class="flex items-center justify-between space-y-4">
                     <h1 class="text-zinc-400 text-sm">Total de clicks</h1>
                     <span class="bg-gradient-to-r from-purple-500 to-purple-800 p-1 rounded">

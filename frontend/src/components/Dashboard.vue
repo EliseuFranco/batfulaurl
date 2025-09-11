@@ -103,26 +103,34 @@
     const listUserURL = async function() {
         const token = localStorage.getItem('token')
         const apiUrl = import.meta.env.VITE_API_URL
+
         const resquetToken = await fetch(`${apiUrl}/dashboard?page=${currantPage.value}`, {
             headers : { 'Authorization': `Bearer ${token}` }
         })
+
         const tokenData = await resquetToken.json()
 
         if(tokenData.error){
-            msg.value = "Não fopinpssível realizar login, erro na comunicação com o servidor"
+            msg.value = "Não foi pssível realizar login, erro na comunicação com o servidor"
+            return
         }
-        all_urls.value = tokenData.all_urls.urls || []
+
+        all_urls.value = tokenData.all_urls || {}
         header.value = tokenData.header || {}
         areaChartData.value = tokenData.all_urls.seven_days_clicks || []
         areaData2.value = tokenData.all_urls.unique_7d_clicks || []
         devices.value = tokenData.all_urls.devices || []
         cities.value = tokenData.all_urls.cities || []
 
-        pageInfo.value = {
-            page: tokenData.all_urls.page,
-            total_pages: tokenData.all_urls.total_pages
-        }
-       
+        
+        // pageInfo.value = {
+        //     page: tokenData.all_urls.page,
+        //     total_pages: tokenData.all_urls.total_pages
+        // }
+
+        // all_urls.value.at(0).page = tokenData.all_urls.page
+        // all_urls.value.at(0).total_pages = tokenData.all_urls.page
+        
     }
 
     const handlerCopyMessage = function(message){

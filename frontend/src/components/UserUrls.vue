@@ -2,10 +2,10 @@
   <section class="p-10 mx-auto">
     <h2 class="text-xl text-zinc-100 font-semibold mb-4">URLs Encurtadas</h2>
 
-    <div v-if="urls.length > 0 ">
+    <div v-if="urls.urls">
       <ul class="space-y-4">
         <li
-          v-for="(url, index) in urls"
+          v-for="(url, index) in urls.urls"
           :key="index"
           class="bg-zinc-950 rounded-xl w-full p-4 shadow flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm">
           <div class="w-full space-y-4">
@@ -56,9 +56,9 @@
       <div class="flex items-center gap-2 justify-center mt-4">
         <button class="border border-zinc-900 p-2 text-xs rounded-xl cursor-pointer text-zinc-70 hover:bg-white hover:text-zinc-950"
           :disabled="currentPage === 1" @click="pagination(currentPage -=1)"> &lt; Previous</button>
-        <span class="text-sm">{{ pages.page }} de {{ pages.total_pages }}</span>
+        <span class="text-sm">{{ urls.page }} de {{ urls.total_pages }}</span>
         <button class="border border-zinc-900 p-2 text-xs rounded-xl cursor-pointer text-zinc-70 hover:bg-white hover:text-zinc-950"
-        @click="pagination(currentPage+=1)" :disabled="urls.total_pages === urls.page">Next &gt;</button>
+        @click="pagination(currentPage+=1)" :disabled="urls.total_pages === urls.page">Next {{ pages }} &gt;</button>
     </div> 
     </div>
     <div v-else>
@@ -83,7 +83,7 @@
 
   const props = defineProps({
       urls : {
-        type: Array
+        type: Object
       },
       pages: {
         type: Object,
@@ -135,5 +135,6 @@
     const handlerCopy = async function(slug){
         const message = await copyToClipBoard(slug)
         emits('message', message)
+
     }
 </script>

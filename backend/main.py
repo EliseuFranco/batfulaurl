@@ -185,6 +185,16 @@ async def original_url(request : ShortenUrlRequest, session : sessionDP):
 
 import logging
 
+
+def get_client_ip(request: Request):
+
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        ip = forwarded.split(",")[0]  # pega o primeiro IP
+    else:
+        ip = request.client.host
+    return ip
+
 @app.get("/redirect")
 async def redirect_to_original(user_slug: str, session: sessionDP, request: Request):
     try:
@@ -209,7 +219,8 @@ async def redirect_to_original(user_slug: str, session: sessionDP, request: Requ
             browser = user_agent.browser.family
 
     
-        client_ip_address = request.client.host or "0.0.0.0"
+        client_ip_address = get_client_ip(request) or request.client.host or "0.0.0.0"
+        print("Endereço ip do cliente: ", client_ip_address)
         logging.info(f"IP do cliente: {client_ip_address}")
 
         try:
@@ -321,6 +332,7 @@ async def login(user: LoginData, session : sessionDP):
         token = create_token(payload)
 
         return {'msg': 'Utilizador autenticado com sucesso', 'status_code': 201, 'token': token}
+    
         
   
     except Exception as e:
@@ -354,6 +366,10 @@ async def dashboard(request: Request, session: sessionDP, page: int):
     serialized_unique_7d = serialize_7d_clicks(unique_clicks_7d) or []
     serialized_device = serialize_device(clicks_by_devices) or []
     city_serialized = serialize_cities(clicks_by_cities) or []
+
+    countries = session.exec(select(Clicks.country)).all()
+
+    print("Países: ", countries)
 
     
     return {

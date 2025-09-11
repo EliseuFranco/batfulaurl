@@ -18,11 +18,11 @@
         <div class="p-3 grow">
             <MetrictsCards :data="header"/>
         </div>
-        <div class="flex flex-col lg:flex-row items-center lg:p-5">
+        <div class="flex flex-col lg:flex-row lg:justify-between items-center lg:p-1">
             <AreaChart :chartData="areaChartData" :chartData2 ="areaData2" class="w-full"/>
             <BarChart class=""/>
         </div>
-        <div class="flex flex-col lg:flex-row ">
+        <div class="flex flex-col lg:flex-row mt-7">
             <DonutsChart :data="devices"/>
             <CityTable class="grow" :data="cities"/>
         </div>

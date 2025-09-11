@@ -1,7 +1,7 @@
 <template>
-    <section class="text-white p-3 md:p-10 h-full">
+    <section class="text-white p-3 md: h-full">
         <div class="border border-zinc-900  rounded-2xl transition-all ease-in-out
-            duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm h-full flex">
+            duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm h-full flex justify-center">
             <apexchart type="donut" width="380" :options="chartOptions" :series="series"></apexchart>
       </div>
     </section>

@@ -1,6 +1,6 @@
 <template>
-    <section class="p-3 md:p-10 text-black w-full ">
-        <div class="border border-zinc-900  rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-105 shadow hover:shadow-purple-200 shadow-sm">
+    <section class="p-3 md:p-1 text-black w-full ">
+        <div class="border border-zinc-900  rounded-2xl transition-all ease-in-out duration-500 transform hover:scale-100 shadow hover:shadow-purple-200 shadow-sm">
         <apexchart height="350" width="95%" :options="chartOptions" :series="series"></apexchart>
       </div>
     </section>

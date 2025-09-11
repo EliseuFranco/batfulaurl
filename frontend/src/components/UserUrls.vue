@@ -1,6 +1,6 @@
 <template>
-  <section class="p-10 mx-auto">
-    <h2 class="text-xl text-zinc-100 font-semibold mb-4">URLs Encurtadas</h2>
+  <section class="p-3 mx-auto">
+    <h2 class="text-xl text-zinc-100 font-semibold mb-4 p-2">URLs Encurtadas</h2>
 
     <div v-if="urls.urls">
       <ul class="space-y-4">
